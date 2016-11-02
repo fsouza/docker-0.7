@@ -13,18 +13,13 @@ Clone this repository and run ``vagrant up``:
 % vagrant up
 ```
 
-After running vagrant, you can ssh into the host and execute Docker:
-
-
-```
-% vagrant ssh
-vagrant> sudo docker -d
-```
-
-And finally, with docker daemon running, you can import the image:
+After running vagrant, you can ssh into the host and use Docker:
 
 ```
-vagrant> cat /vagrant/ubuntu.tar | sudo docker import - ubuntu:12.04
+$ sudo docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+ubuntu              12.04               8afd099d45d3        3 minutes ago       83.59 MB
+$ sudo docker run ubuntu:12.04 cat /etc/passwd
 ```
 
 Please don't use this for anything serious :)
