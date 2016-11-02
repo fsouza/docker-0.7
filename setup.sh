@@ -29,3 +29,22 @@ pushd $DOCKER_PATH
 git checkout v$DOCKER_VERSION
 CGO_CFLAGS=-I/usr/local/lvm2/include CGO_LDFLAGS=-L/usr/local/lvm2/libdm go build -ldflags '-X github.com/dotcloud/docker/utils.IAMSTATIC true -linkmode external -extldflags "-lpthread -static -Wl,--unresolved-symbols=ignore-in-object-files"' -o /usr/bin/docker ./docker
 popd
+
+cat > /etc/init/docker.conf <<EOF
+description "Docker daemon"
+
+start on (filesystem and net-device-up IFACE!=lo)
+stop on runlevel [!2345]
+limit nofile 524288 1048576
+limit nproc 524288 1048576
+
+respawn
+
+kill timeout 20
+
+exec /usr/bin/docker -d
+EOF
+
+start docker
+sleep 2
+cat /vagrant/ubuntu.tar | docker import - ubuntu:12.04
